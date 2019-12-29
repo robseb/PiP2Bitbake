@@ -139,6 +139,15 @@ SRC_URI[sha256sum] = "6e2d401fdee0eab996cf734e67773a0143b932772ca8b42451440cfed9
 
 ````
 
+### Finally on the running Yocto-Linux ....
+````bash
+root@cyclone5:~# pip list
+Package    Version
+---------- -------
+pyserial   3.4.0
+````
+### is `pyserial`pre-installed 
+
 
 # Author
 * **Robin Sebastian**
