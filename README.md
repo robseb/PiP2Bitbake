@@ -1,12 +1,12 @@
 # PiP2Bitbake
-With this python script it is possible to pre-install Python pip (PyPI)- Packages within a final Yocto Project Linux Image. 
+**With this python script it is possible to pre-install Python pip (PyPI)- Packages within a final Yocto Project Linux Image.** 
 In order to make this possible it will generate a Bitbake-file with all necessary informations (Version Number, Checksums,..)
 to allow Bitbake to included the selected pip-package to the rootfs of the generated Linux system. 
 This script support all current pip- and python-versions.
 
 I developed this script to create [*rsYocto*](https://github.com/robseb/rsyocto) a embbeded Linux for Intel SoC-FPGAs. 
 
-# Guide to use is script
+# Guide to use this script
 1.  Pull this repository to your Yocto Project building machine
 2.  Be sure that Python pip are installed 
     * To install that use on Ubuntu:
