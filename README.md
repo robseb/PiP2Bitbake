@@ -1,7 +1,7 @@
 # PiP2Bitbake
 **With this python script it is possible to pre-install Python pip (PyPI)- Packages within a final Yocto Project Linux Image.** 
 In order to make this possible it will generate a Bitbake-file with all necessary informations (Version Number, Checksums,..)
-to allow Bitbake to included the selected pip-package to the rootfs of the generated Linux system. 
+to allow Bitbake to include the selected pip-package to the rootfs of the generated Linux system. 
 This script support all current pip- and python-versions.
 
 I developed this script to create [*rsYocto*](https://github.com/robseb/rsyocto) a embbeded Linux for Intel SoC-FPGAs. 
@@ -25,13 +25,13 @@ I developed this script to create [*rsYocto*](https://github.com/robseb/rsyocto)
         2. For the required **Python-Version**
         3. For the **Type of Licence** (e.g. MIT) for recipe
 7. The Python script will generate a *.bb-Bitbake*-file
-    * Copy that file to your recipe folder
+    * Copy this file to your recipe folder
     * If you don't have a meta-layer create a new one
         * Execute following command inside your Yocto Project build Folder (`poky/build`)
             ```bash 
             bitbake-layers create-layer meta-example
             ````
-        * Include the new layer to your Yocto Project by adding following line to the `poky/build/conf/bblayers.conf`-File:
+        * Include the new layer to your Yocto Project by adding following line to the `poky/build/conf/bblayers.conf`-file:
             ````txt 
             /home/<user name>/poky/meta-example \
             ````
@@ -44,7 +44,7 @@ I developed this script to create [*rsYocto*](https://github.com/robseb/rsyocto)
              |- test
                 |-GENERATED_BITBAKAE_FILE.bb
        ```
-8. Include the Python pip-package to your Yocto Build by edding following line to the `poky/build/conf/local.conf`
+8. Include the Python pip-package to your Yocto Build by edding following line to the `poky/build/conf/local.conf`-file
     ```txt 
     IMAGE_INSTALL_append = "pip-PIPNAME"
     ````
