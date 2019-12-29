@@ -59,13 +59,13 @@ if __name__ == '__main__':
         try:
             selectedPythonVersion = int(temp)
         except ValueError:
-            print('Your Input is not vialed! Please choose a Number between 1 and 3!')
+            print('Your Input is not valid! Please choose a Number between 1 and 3!')
             continue
 
         if(selectedPythonVersion>=1 and selectedPythonVersion<=3):
             break
         else:
-            print('Your Input is not vialed! Please choose a Number between 1 and 3!')
+            print('Your Input is not valid! Please choose a Number between 1 and 3!')
 
     print("Type in the used License name for the recipe (e.g.: MIT)")
     licensenName = input('License name: ')
@@ -79,19 +79,19 @@ if __name__ == '__main__':
         try:
             shutil.rmtree(os.getcwd()+'/mkaePiP_workingFolder')
         except PermissionError:
-            print('Failed to delate the working Folder ( no sudo rights!)')
-            print(' Please delate following folder by hand')
+            print('Failed to delete the working Folder ( no sudo rights!)')
+            print(' Please delete following folder by hand')
             print(os.getcwd()+'/mkaePiP_workingFolde') 
             print('and try it again')
             sys.exit()
     os.mkdir('mkaePiP_workingFolder')
 
-    # Download for test the pip package
-    print('--> Downloading for test the Python PiP package')
+    # Download for testing the pip package
+    print('--> Download for testing the Python PiP package')
 
     os.system('pip download --no-deps --no-binary :all: --only-binary none  -d mkaePiP_workingFolder/ '+PipName)
 
-    # Reading the download file and detect the file type
+    # Reading the downloaded files and detect the file type
     targzFiles = [f for f in os.listdir(os.getcwd()+'/mkaePiP_workingFolder') if f.endswith('.tar.gz')]
     zipFiles   = [f for f in os.listdir(os.getcwd()+'/mkaePiP_workingFolder') if f.endswith('.zip')]
 
@@ -146,7 +146,7 @@ if __name__ == '__main__':
     else:
         decodingversionFailed = True
 
-    # In case of Version string encoding trigger a error message
+    # In case of Version string encoding trigger an error message
     if decodingversionFailed:
         print('--> ERROR: Decoding downloaded file failed!')
         print('    The file name must be in following syntax:')
@@ -165,11 +165,11 @@ if __name__ == '__main__':
     else:
         os.system('unzip '+'mkaePiP_workingFolder/'+filename+' -d mkaePiP_workingFolder')
 
-    # Check if the unpackaging was succsesfull
+    # Check if the unpackging was succsesfull
     if(os.path.isdir('mkaePiP_workingFolder/'+fileFolderName)):
         print('     Unpackaging was succsesfull')
     else:
-        print('ERROR: The unpackaging of the downloaded file filed!')
+        print('ERROR: The unpackging of the downloaded file failed!')
         sys.exit()
 
     ####### Try to find the Licence file
@@ -212,7 +212,7 @@ if __name__ == '__main__':
                 if(LicenseFileName ==""):
                     LicenseFileFoundingError = True
                 else:
-                    print('     To avoid this problem the File:\"'+LicenseFileName +'\" will be used instat')
+                    print('     To avoid this problem the File:\"'+LicenseFileName +'\" will be used instead')
                     LicenseFileType =3
                     LicenseFileFoundingError = False
                 break
@@ -231,13 +231,13 @@ if __name__ == '__main__':
     print('    md5sum = '+str(LicenseMd5sum))
 
     ##########
-    # At this point is the user input is vialed and checked 
+    # At this point the user input is valide and checked 
 
     ############################## Giving the .bb  ###################################
 
-    # Yocto allow only lower case numbers without numberers and others caractors
+    # Yocto allows only lower case numbers without numbers and others caractors
 
-    # Check if are only lower case in the chosen PiP-name
+    # Check if there are only lower cases in the choosen PiP-name
     tempName=''
     for c in PipName:
         if not c.islower():
