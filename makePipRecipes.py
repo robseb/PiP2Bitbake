@@ -10,8 +10,9 @@
 #
 #
 #
-# Robin Sebstian (https://github.com/robseb)
+# Robin Sebstian (https://github.com/robseb) 
 #
+# Contact: git@robseb.de
 #
 # Python Script to automatically create a Bitbake recipe for Python PiP Packages
 # This recipe can then be used inside a meta layer for embedded Linux building with 
@@ -19,8 +20,11 @@
 #
 # (2019-12-28) Vers.1.0 
 #   first Version 
-
-version = "1.0"
+#
+# (2020-05-23) Vers.1.1 
+#  better interface
+#
+version = "1.1"
 
 import os
 import sys
@@ -29,10 +33,25 @@ import hashlib, pathlib
 import re
 
 if __name__ == '__main__':
-
-    print("AUTOMATIC SCRIPT FOR GENERATING RECIPES TO INCLUDE")
-    print("PYTHON PIP-PACKAGES TO YOUR YOCTO-PROJECT ")
-    print(" by Robin Sebastian (https://github.com/robseb) Vers.: "+version+"\n")
+    
+    print('\n#############################################################################')
+    print('#                                                                            #')
+    print('#    ########   ######     ##    ##  #######   ######  ########  #######     #')        
+    print('#    ##     ## ##    ##     ##  ##  ##     ## ##    ##    ##    ##     ##    #')          
+    print('#    ##     ## ##            ####   ##     ## ##          ##    ##     ##    #')    
+    print('#    ########   ######        ##    ##     ## ##          ##    ##     ##    #')   
+    print('#    ##   ##         ##       ##    ##     ## ##          ##    ##     ##    #')  
+    print('#    ##    ##  ##    ##       ##    ##     ## ##    ##    ##    ##     ##    #')    
+    print('#    ##     ##  ######        ##     #######   ######     ##     #######     #') 
+    print('#                                                                            #')
+    print("#            AUTOMATIC SCRIPT FOR GENERATING RECIPES TO INCLUDE              #")
+    print("#                 PYTHON PIP-PACKAGES TO YOUR YOCTO-PROJECT                  #")
+    print('#                                                                            #')
+    print("#               by Robin Sebastian (https://github.com/robseb)               #")
+    print("#                        Contact: git@robseb.de                              #")
+    print("#                            Vers.: "+version+"                                      #")
+    print('#                                                                            #')
+    print('##############################################################################\n\n')
 
     # Runtime environment check
     if sys.version_info[0] < 3:
@@ -274,9 +293,6 @@ if __name__ == '__main__':
     ############################################################################################################ 
 
 
-
-
-
     ############################## Create the .bb-Bitbake file ###################################
 
     #### Create a new blank .bb-file
@@ -329,22 +345,34 @@ if __name__ == '__main__':
 
 
 ############################## Implementation Guide ###################################
-
-print('---------------------------- Implementation Guide ----------------------------')
-print(' 1. Step: Copy the recipe file: \"'+bbfilename+'\"')
-print('          to your recipe folder inside a meta layer')
-print('          For example here:')
-print('          meta-example')
-print('          |- conf')
-print('          |- recipes-test')
-print('             |- test')
-print('                |- '+bbfilename+' <--\n')
-print('          (this file is located here:'+os.getcwd()+' )')
-print(' 2. Step: Include the PiP-Package to your Yocto Project by')
-print('          by adding following line to the conf/local.conf file:')
-print('            conf/local.conf:')
-print('             IMAGE_INSTALL_append = "pip-'+RecipieFileName+'"\n')
-print(' 3. Step: Build your Yocto Project normanly with bitbake\n')
-
-print('----------------------------------------------------------------------------')
-print(' .. Script end.. \n')
+print('\n################################################################################')
+print('#                                                                              #')
+print('#                        GENERATION WAS SUCCESSFUL                             #')
+print('#---------------------------- Implementation Guide ----------------------------#')
+print('# 1. Step: Copy the recipe file: \"'+bbfilename+'\"                            #')
+print('#          to your recipe folder inside a meta layer                           #')
+print('#          For example here:                                                   #')
+print('#          meta-example                                                        #')
+print('#          |- conf                                                             #')
+print('#          |- recipes-test                                                     #')
+print('#             |- test                                                          #')
+print('#                |- '+bbfilename+' <--\n                        #')
+print('#          (this file is located here:'+os.getcwd()+' )          #')
+print('# 2. Step: Include the PiP-Package to your Yocto Project by                    #')
+print('#          by adding following line to the conf/local.conf file:               #')
+print('#            conf/local.conf:                                                  #')
+print('#             IMAGE_INSTALL_append = "pip-'+RecipieFileName+'"\n               #')
+print('# 3. Step: Build your Yocto Project normanly with bitbake\n                    #')
+print('#------------------------------------------------------------------------------#')
+print('#                                                                              #')
+print('#                           SUPPORT THE AUTHOR                                 #')
+print('#                                                                              #')
+print('#                            ROBIN SEBASTIAN                                   #')
+print('#                     (https://github.com/robseb/)                             #')
+print('#                                                                              #')
+print('#    makePipRecipes and rsYocto are projects, that I have fully                #')
+print('#        developed on my own. No companies are involved in this projects.      #')
+print('#        Today I aim a Master Student of electronic engineering                #')
+print('#            Please support me for further development                         #')
+print('#                                                                              #')
+print('################################################################################')
