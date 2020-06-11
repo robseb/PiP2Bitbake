@@ -1,4 +1,7 @@
 # PiP2Bitbake
+
+![Alt text](doc/concept.png?raw=true "Concept")
+___
 **With this python script it is possible to pre-install Python pip (PyPI)- Packages within a final Yocto Project Linux Image.** 
 In order to make this possible a Bitbake-file with all necessary informations (Version Number, Checksums,..) will be generated
 to allow Bitbake to include the selected pip-package to the rootFs of the generated Yocto-Linux system. 
