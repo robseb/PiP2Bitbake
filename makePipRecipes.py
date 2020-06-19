@@ -108,7 +108,7 @@ if __name__ == '__main__':
     # Download for testing the pip package
     print('--> Download for testing the Python PiP package')
 
-    os.system('pip download --no-deps --no-binary :all: --only-binary none  -d mkaePiP_workingFolder/ '+PipName)
+    os.system('pip3 download --no-deps --no-binary :all: --only-binary none  -d mkaePiP_workingFolder/ '+PipName)
 
     # Reading the downloaded files and detect the file type
     targzFiles = [f for f in os.listdir(os.getcwd()+'/mkaePiP_workingFolder') if f.endswith('.tar.gz')]
