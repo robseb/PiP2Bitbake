@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3.7
 #
 #            ########   ######     ##    ##  #######   ######  ########  #######                  
 #            ##     ## ##    ##     ##  ##  ##     ## ##    ##    ##    ##     ##           
@@ -7,10 +7,14 @@
 #            ##   ##         ##       ##    ##     ## ##          ##    ##     ##      
 #            ##    ##  ##    ##       ##    ##     ## ##    ##    ##    ##     ##        
 #            ##     ##  ######        ##     #######   ######     ##     #######         
+#             ___          _   _      _     ___               _                 
+#            | _ )  _  _  (_) | |  __| |   / __|  _  _   ___ | |_   ___   _ __  
+#            | _ \ | || | | | | | / _` |   \__ \ | || | (_-< |  _| / -_) | '  \ 
+#            |___/  \_,_| |_| |_| \__,_|   |___/  \_, | /__/  \__| \___| |_|_|_|
+#                                                  |__/                             
 #
 #
-#
-# Robin Sebstian (https://github.com/robseb) 
+# Robin Sebastian (https://github.com/robseb) 
 #
 # Contact: git@robseb.de
 #
@@ -24,7 +28,13 @@
 # (2020-05-23) Vers.1.1 
 #  better interface
 #
-version = "1.1"
+# (2021-02-15) Vers.1.2 
+#  Allow to use packages with "-" in the name
+#  Allow to use URLs as pip name to create recipes for on the 
+#        build machine not supported packages 
+# Information of the not supported ".whl" packages 
+#
+version = "1.2"
 
 import os
 import sys
@@ -32,9 +42,36 @@ import shutil
 import hashlib, pathlib
 import re
 
+WORKING_FOLDER_NAME = "makePipRec_workingFolder"
+
+#
+# @brief Function to remove the working folder
+# @return success 
+#
+def removeWorkingFolder():
+    # Create a temp working directory 
+    if(os.path.isdir(WORKING_FOLDER_NAME)):
+        try:
+            os.system('sudo rm -r '+os.getcwd()+'/'+WORKING_FOLDER_NAME)
+        except PermissionError:
+            print('\nERROR: Failed to delete the working Folder')
+            print('Super user (root) privileges required to delate this folder!')
+            print(' Please delete following folder by hand')
+            print('"'+os.getcwd()+'/'+WORKING_FOLDER_NAME+'"') 
+            print('and try it again')
+            return False
+        except Exception as ex:
+            print('\nERROR: Failed to delete the working Folder')
+            print(' Error Msg.: "'+str(ex)+'"')
+            print(' Please delete following folder by hand')
+            print('"'+os.getcwd()+'/'+WORKING_FOLDER_NAME+'"')
+            print('and try it again')
+            return False
+    return True    
+
 if __name__ == '__main__':
     
-    print('\n#############################################################################')
+    print('\n##############################################################################')
     print('#                                                                            #')
     print('#    ########   ######     ##    ##  #######   ######  ########  #######     #')        
     print('#    ##     ## ##    ##     ##  ##  ##     ## ##    ##    ##    ##     ##    #')          
@@ -45,7 +82,7 @@ if __name__ == '__main__':
     print('#    ##     ##  ######        ##     #######   ######     ##     #######     #') 
     print('#                                                                            #')
     print("#            AUTOMATIC SCRIPT FOR GENERATING RECIPES TO INCLUDE              #")
-    print("#                 PYTHON PIP-PACKAGES TO YOUR YOCTO-PROJECT                  #")
+    print("#           PYTHON PIP-PACKAGES TO YOUR YOCTO-PROJECT LINUX DISTO            #")
     print('#                                                                            #')
     print("#               by Robin Sebastian (https://github.com/robseb)               #")
     print("#                        Contact: git@robseb.de                              #")
@@ -63,18 +100,37 @@ if __name__ == '__main__':
         sys.exit()
     ############################################ READ USER INPUT (PiP Name and Version) ###########################################
     
-    print('Please type in the Name of the PiP-Package to include')
+    print('Type in the Name of the Python pip (PyPI) Package to include to your Yocto Project Linux Distro')
     print('Note: Consider the exact writing! Case sensitive!')
+    print('You can find Python pip packages here: https://pypi.org/')
     PipName =input('PiP-Package Name: ')
+    Pipurl = PipName
 
+    if PipName=='q' or PipName=='Q': sys.exit()
+    if PipName.endswith('.whl'):
+        print('ERROR: Download URLs with ".whl" archive files are not supported!')
+        print('       It is only enabled to download ".tar.gz"- and ".zip" source code files!')
+        sys.exit()
+    elif (PipName.endswith('.tar.gz') or PipName.endswith('.zip')) and PipName.find('http')!=-1:
+        # A HTTP/HTTPS URL was used
+        print('\nYou inserted a URL to a Python pip (PyPi) package ')
+        print('Insert the regular pip(PyPI) Package name:')
+        print('Note: Consider the exact writing! Case sensitive!')
+        PipName =input('PiP-Package Name: ')
+        if PipName=='q' or PipName=='Q': sys.exit()
+        if (PipName.endswith('.whl') or PipName.endswith('.zip')) and PipName.find('http'):
+            print('ERROR: Insert the regular Python pip name not a URL (e.g. "django")')
+            sys.exit()
+
+    selectedPythonVersion = 0
     print("Choose the requiered Python Version:")
     print("  Python 1-2: 1,2 ")
     print("  Python 3  : 3   ")
 
-    selectedPythonVersion = 0
-
     while(True):
         temp = input("Python Version:")
+        if temp=='q' or temp=='Q': sys.exit()
+
         try:
             selectedPythonVersion = int(temp)
         except ValueError:
@@ -89,30 +145,28 @@ if __name__ == '__main__':
     print("Type in the used License name for the recipe (e.g.: MIT)")
     licensenName = input('License name: ')
 
+    if licensenName=='\r' or licensenName=='\n\r'or licensenName=='': licensenName='MIT'
+    if PipName=='q' or PipName=='Q': sys.exit()
+    print('Chosen License name: "'+licensenName+'"')
     print('Starting the generation...\n')
 
     ################################################ Download the PiP File ###########################################
 
-    # Create a temp working directory 
-    if(os.path.isdir('mkaePiP_workingFolder')):
-        try:
-            shutil.rmtree(os.getcwd()+'/mkaePiP_workingFolder')
-        except PermissionError:
-            print('Failed to delete the working Folder ( no sudo rights!)')
-            print(' Please delete following folder by hand')
-            print(os.getcwd()+'/mkaePiP_workingFolde') 
-            print('and try it again')
-            sys.exit()
-    os.mkdir('mkaePiP_workingFolder')
+    # Remove the old temp working directory and create a new one 
+    if not removeWorkingFolder():
+        sys.exit()
+    os.mkdir(WORKING_FOLDER_NAME)
 
     # Download for testing the pip package
     print('--> Download for testing the Python PiP package')
 
-    os.system('pip3 download --no-deps --no-binary :all: --only-binary none  -d mkaePiP_workingFolder/ '+PipName)
+    os.system('pip3 download --no-deps --no-binary :all: --only-binary none  -d '+WORKING_FOLDER_NAME+'/ '+Pipurl)
+    
+
 
     # Reading the downloaded files and detect the file type
-    targzFiles = [f for f in os.listdir(os.getcwd()+'/mkaePiP_workingFolder') if f.endswith('.tar.gz')]
-    zipFiles   = [f for f in os.listdir(os.getcwd()+'/mkaePiP_workingFolder') if f.endswith('.zip')]
+    targzFiles = [f for f in os.listdir(os.getcwd()+'/'+WORKING_FOLDER_NAME) if f.endswith('.tar.gz')]
+    zipFiles   = [f for f in os.listdir(os.getcwd()+'/'+WORKING_FOLDER_NAME) if f.endswith('.zip')]
 
     detectedFiletype = 0 # 1= .tar.gz-File | 2= .zip-File
     filename = ''
@@ -125,8 +179,18 @@ if __name__ == '__main__':
         detectedFiletype = 2
         filename = zipFiles[0]
     else:
-        print('ERROR: The download failed!') 
-        print('Read the console log above and try again!\n')
+        print('\n##############################################################################')
+        print('#       ERROR: Failed to download the chosen Python pip (PyPi) package!      #')
+        print('#                                                                            #')
+        print('#      Please read the error report of the executed "pip" command above!     #')
+        print('#                                                                            #')
+        print('# You can use the direct download URL (with ".tar.gz"- or ".zip"- suffix)    #')
+        print('#   as pip package name                                                      #')
+        print('#                                                                            #')
+        print('# Note: It is only enabled incase the universal source code is available     #')
+        print('#       as ".tar.gz" or ".zip" archive file (".whl"-files are not supported) #')
+        print('#                                                                            #')
+        print('##############################################################################\n')
         sys.exit()
 
     print('\n   The Name of the downloaded file: \"'+filename+'\"')
@@ -134,11 +198,11 @@ if __name__ == '__main__':
     ############################################# Calculate checksums for the file ########################################
 
     print('--> Calculate md5 checksum of this file')
-    md5sum=hashlib.md5(pathlib.Path(os.getcwd()+'/mkaePiP_workingFolder/'+filename).read_bytes()).hexdigest()
+    md5sum=hashlib.md5(pathlib.Path(os.getcwd()+'/'+WORKING_FOLDER_NAME+'/'+filename).read_bytes()).hexdigest()
     print('    md5sum = '+str(md5sum))
 
     print('--> Calculate sha256sum checksum of this file')
-    sha256sum=hashlib.sha256(pathlib.Path(os.getcwd()+'/mkaePiP_workingFolder/'+filename).read_bytes()).hexdigest()
+    sha256sum=hashlib.sha256(pathlib.Path(os.getcwd()+'/'+WORKING_FOLDER_NAME+'/'+filename).read_bytes()).hexdigest()
     print('    sha256sum = '+str(sha256sum))
 
     ######################################### Read the Version Code for this package ######################################
@@ -149,6 +213,11 @@ if __name__ == '__main__':
     decodingversionFailed = False
 
     pipNamepos = filename.find(PipName)
+    if pipNamepos ==-1:
+        # try to replace "-" with "_"
+        PipName = PipName.replace('-','_')
+        pipNamepos = filename.find(PipName)
+        
     if (pipNamepos >-1):
         # Find the position of the File Suffix
         if(detectedFiletype == 1 ):
@@ -180,20 +249,20 @@ if __name__ == '__main__':
     print('    Unpackage the downloaded package')
 
     if(detectedFiletype == 1 ):
-        os.system('sudo tar -xzpf '+'mkaePiP_workingFolder/'+filename+' -C mkaePiP_workingFolder')
+        os.system('sudo tar -xzpf '+WORKING_FOLDER_NAME+'/'+filename+' -C '+WORKING_FOLDER_NAME)
     else:
-        os.system('unzip '+'mkaePiP_workingFolder/'+filename+' -d mkaePiP_workingFolder')
+        os.system('unzip '+'WORKING_FOLDER_NAME/'+filename+' -d '+WORKING_FOLDER_NAME)
 
-    # Check if the unpackging was succsesfull
-    if(os.path.isdir('mkaePiP_workingFolder/'+fileFolderName)):
-        print('     Unpackaging was succsesfull')
+    # Check if the unpacking was successful
+    if(os.path.isdir(WORKING_FOLDER_NAME+'/'+fileFolderName)):
+        print('     Unpackaging was successful')
     else:
-        print('ERROR: The unpackging of the downloaded file failed!')
+        print('ERROR: The unpacking of the downloaded file failed!')
         sys.exit()
 
     ####### Try to find the Licence file
     print('    Try to find a Licence file')
-    noSufFiles = [f for f in os.listdir(os.getcwd()+'/mkaePiP_workingFolder/'+fileFolderName) if f.endswith('')]
+    noSufFiles = [f for f in os.listdir(os.getcwd()+'/'+WORKING_FOLDER_NAME+'/'+fileFolderName) if f.endswith('')]
     LicenseFileFoundingError = False
 
     LicenseFileType =0 # 1: LICENSE.txt | 2: LICENSE | 3: any other file (see LicenseFileName)
@@ -225,7 +294,7 @@ if __name__ == '__main__':
                 # Use any other file as LICENSE-File
                 print('NOTE: The LICENSE-File was not found inside the PiP-Package!')
                 for it in noSufFiles: 
-                    if(os.path.isfile(os.getcwd()+'/mkaePiP_workingFolder/'+fileFolderName+'/'+it)):
+                    if(os.path.isfile(os.getcwd()+'/'+WORKING_FOLDER_NAME+'/'+fileFolderName+'/'+it)):
                         LicenseFileName  = it
 
                 if(LicenseFileName ==""):
@@ -246,7 +315,7 @@ if __name__ == '__main__':
     ####### Calculate the md5sum for LICENSE.txt
     print('--> Calculate the md5-checksum for the License file')
 
-    LicenseMd5sum=hashlib.md5(pathlib.Path(os.getcwd()+'/mkaePiP_workingFolder/'+fileFolderName+'/'+LicenseFileName).read_bytes()).hexdigest()
+    LicenseMd5sum=hashlib.md5(pathlib.Path(os.getcwd()+'/'+WORKING_FOLDER_NAME+'/'+fileFolderName+'/'+LicenseFileName).read_bytes()).hexdigest()
     print('    md5sum = '+str(LicenseMd5sum))
 
     ##########
@@ -256,11 +325,11 @@ if __name__ == '__main__':
 
     # Yocto allows only lower case numbers without numbers and others caractors
 
-    # Check if there are only lower cases in the choosen PiP-name
+    # Check if there are only lower cases in the chosen PiP-name
     tempName=''
     for c in PipName:
         if not c.islower():
-            # if not set carachter low
+            # if not set character low
             c = c.lower()
         tempName=tempName+c
     RecipieFileName = tempName
@@ -313,7 +382,7 @@ if __name__ == '__main__':
     
     ########### Generate the conntet of the .bb-file
     bbFileContent = '# The is automatic generated Code by "makePipRecipes.py"\n' \
-        '# (build by Robin Sebastian (https://github.com/robseb) Vers.: '+version+') \n' \
+        '# (build by Robin Sebastian (https://github.com/robseb) (git@robseb.de) Vers.: '+version+') \n' \
         '\n' \
         'SUMMARY = "Recipie to embedded the Python PiP Package '+PipName+'"\n' \
         'HOMEPAGE ="https://pypi.org/project/'+PipName+'"\n' \
@@ -330,49 +399,45 @@ if __name__ == '__main__':
         f.write(bbFileContent)    
     
     # Download for test the pip package
-    print('     Bitbake file generation was successfull\n')
+    print('     Bitbake file generation was successfull')
 
 
 ############################ Remove the Working Folder ################################
     print('--> Deleting the working Folder')
-    if(os.path.isdir('mkaePiP_workingFolder')):
-        try:
-            shutil.rmtree(os.getcwd()+'/mkaePiP_workingFolder')
-        except PermissionError:
-            print('Failed to delate the working Folder ( no sudo rights!)')
-            print(' Please delate following folder by hand')
-            print(os.getcwd()+'/mkaePiP_workingFolde')
-
+    removeWorkingFolder()
 
 ############################## Implementation Guide ###################################
 print('\n################################################################################')
 print('#                                                                              #')
-print('#                        GENERATION WAS SUCCESSFUL                             #')
+print('#                          GENERATION WAS SUCCESSFUL                           #')
+print('#                                                                              #')
 print('#---------------------------- Implementation Guide ----------------------------#')
-print('# 1. Step: Copy the recipe file: \"'+bbfilename+'\"                            #')
-print('#          to your recipe folder inside a meta layer                           #')
-print('#          For example here:                                                   #')
-print('#          meta-example                                                        #')
-print('#          |- conf                                                             #')
-print('#          |- recipes-test                                                     #')
-print('#             |- test                                                          #')
-print('#                |- '+bbfilename+' <--\n                        #')
-print('#          (this file is located here:'+os.getcwd()+' )          #')
-print('# 2. Step: Include the PiP-Package to your Yocto Project by                    #')
-print('#          by adding following line to the conf/local.conf file:               #')
-print('#            conf/local.conf:                                                  #')
-print('#             IMAGE_INSTALL_append = "pip-'+RecipieFileName+'"\n               #')
-print('# 3. Step: Build your Yocto Project normanly with bitbake\n                    #')
+print('# 1. Step: Copy the recipe file: \"'+bbfilename+'\"                            ')
+print('#          to your recipe folder inside a meta layer                           ')
+print('#          For example here:                                                   ')
+print('#          meta-example                                                        ')
+print('#          |- conf                                                             ')
+print('#          |- recipes-test                                                     ')
+print('#             |- test                                                          ')
+print('#                |- '+bbfilename+' <--\n                                       ')
+print('#          (this file is located here:'+os.getcwd()+' )          ')
+print('# 2. Step: Include the PiP-Package to your Yocto Project by                    ')
+print('#          by adding following line to the conf/local.conf file:               ')
+print('#            conf/local.conf:                                                  ')
+print('#             IMAGE_INSTALL_append = "pip-'+RecipieFileName+'"\n               ')
+print('# 3. Step: Build your Yocto Project normanly with bitbake\n                    ')
 print('#------------------------------------------------------------------------------#')
 print('#                                                                              #')
 print('#                           SUPPORT THE AUTHOR                                 #')
 print('#                                                                              #')
 print('#                            ROBIN SEBASTIAN                                   #')
 print('#                     (https://github.com/robseb/)                             #')
+print('#                             git@robseb.de                                    #')
 print('#                                                                              #')
 print('#    makePipRecipes and rsYocto are projects, that I have fully                #')
 print('#        developed on my own. No companies are involved in this projects.      #')
-print('#        Today I aim a Master Student of electronic engineering                #')
+print('#       I am recently graduated as Master of Since of electronic engineering   #')
 print('#            Please support me for further development                         #')
 print('#                                                                              #')
 print('################################################################################')
+# EOF
