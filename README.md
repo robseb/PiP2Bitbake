@@ -189,7 +189,6 @@ The Name of the downloaded file: "pyserial-3.5.tar.gz"
 ################################################################################
 ````
 
-
 ### Content of the generated file: `pip-pyserial_3.4.bb`
 ````bitbake  
 # The is a automatic generated Code by "makePipRecipes.py"
@@ -204,12 +203,10 @@ inherit pypi setuptools
 PYPI_PACKAGE = "pyserial"
 SRC_URI[md5sum] = "ed6183b15519a0ae96675e9c3330c69b"
 SRC_URI[sha256sum] = "6e2d401fdee0eab996cf734e67773a0143b932772ca8b42451440cfed942c627"
-
 ````
 </details>
-<br>
 
-### Finally on the running Yocto-Linux ....
+### Finally on the running Yocto-Project Linux Distribution ....
 ````bash
 root@cyclone5:~# pip list
 Package    Version
@@ -217,7 +214,7 @@ Package    Version
 pyserial   3.4.0
 ````
 ### is `pyserial`pre-installed 
-
+<br>
 
 # Author
 **Robin Sebastian**
