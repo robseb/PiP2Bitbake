@@ -216,18 +216,20 @@ pyserial   3.4.0
 ### is `pyserial`pre-installed 
 <br>
 
-# Author
-**Robin Sebastian**
+   
+* *rsyocto*; **Robin Sebastian,M.Sc. [(LinkedIn)](https://www.linkedin.com/in/robin-sebastian-a5080220a)**
 
+*Pip2BitBake* and *rsyocto* are self-developed projects in which no other companies are involved. 
+It is specifically designed to serve students and the Linux/FPGA open-source community with its publication on GitHub and its open-source MIT license. 
+In the future, *rsyocto* will retain its open-source status and it will be further developed. 
 
-*PiP2Bitbake* and [*rsyocto*](https://github.com/robseb/rsyocto) are Projects, that I have fully developed on my own.
-No companies are involved in these projects.
-I’m recently graduated as a master in electrical engineering with the major embedded systems (*M. Sc.*).
+Due to the enthusiasm of commercial users, special features for industrial, scientific and automotive applications 
+were developed and ready for the implementation in a highly optimazed closed commercial version. 
+Partnerships as an embedded SoC-FPGA design service to fulfil these specific commercial requirements are offered. 
+It should help, besides students with the *rsyocto* open-source version, commercial users, as well.   
 
-I'm open for cooperations as a freelancer to realize your specific requirements.
-Otherwise, I‘m looking for an interesting full time job offer to share and deepen my shown skills.
-
-**[Github sponsoring is welcome.](https://github.com/sponsors/robseb)**
+**For commercial users, please visit the *rsyocto* embedded service provider website:** 
+[**rsyocto.com**](https://rsyocto.com/)
 
 [![GitHub stars](https://img.shields.io/github/stars/robseb/PiP2Bitbake?style=social)](https://GitHub.com/robseb/PiP2Bitbake/stargazers/)
 [![GitHub watchers](https://img.shields.io/github/watchers/robseb/PiP2Bitbake?style=social)](https://github.com/robseb/NIOSII_EclipseCompProject/watchers)
