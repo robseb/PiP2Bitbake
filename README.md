@@ -171,7 +171,7 @@ The Name of the downloaded file: "pyserial-3.5.tar.gz"
 #            conf/local.conf:                                                  
 #             IMAGE_INSTALL_append = "pip-pyserial"
             
-# 3. Step: Build your Yocto Project normanly with bitbake
+# 3. Step: Build your Yocto Project normally with bitbake
                     
 #------------------------------------------------------------------------------#
 #                                                                              #
@@ -194,7 +194,7 @@ The Name of the downloaded file: "pyserial-3.5.tar.gz"
 # The is a automatic generated Code by "makePipRecipes.py"
 # (by Robin Sebastian (https://github.com/robseb) Vers.: 1.0) 
 
-SUMMARY = "Recipie to embedded the Python PiP Package pyserial"
+SUMMARY = "Recipe to embedded the Python PiP Package pyserial"
 HOMEPAGE ="https://pypi.org/project/pyserial"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=d476d94926db6e0008a5b3860d1f5c0d"
