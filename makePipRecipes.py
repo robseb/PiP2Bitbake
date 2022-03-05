@@ -332,16 +332,16 @@ if __name__ == '__main__':
             # if not set character low
             c = c.lower()
         tempName=tempName+c
-    RecipieFileName = tempName
+    RecipeFileName = tempName
     
     # Check if any not allowed characters are in this string and remove them
     pos =0
     tempName=''
-    for c in RecipieFileName:
+    for c in RecipeFileName:
         if not re.match('^[0-9]*$', c): 
             tempName=tempName+c
     
-    RecipieFileName = tempName 
+    RecipeFileName = tempName
 
     ############################################################################################################
     #                                                                                                          #
@@ -355,7 +355,7 @@ if __name__ == '__main__':
     #   PiPversionStr                 ->  piP Package Version String                                           #      
     #   LicenseFileName               ->  the file name of License File                                        #
     #   LicenseMd5sum                 ->  md5 checksum of the License file                                     #
-    #   RecipieFileName               ->  name of the two recipe files (without suffix)                        # 
+    #   RecipeFileName                ->  name of the two recipe files (without suffix)                        #
     #                                                                                                          #     
     #                                                                                                          #                         
     #                                                                                                          #         
@@ -366,7 +366,7 @@ if __name__ == '__main__':
 
     #### Create a new blank .bb-file
     # File syntax: pip-<PiP Name>_<Version No>.<File Sufix>
-    bbfilename = 'pip-'+RecipieFileName+'_'+PiPversionStr+'.bb'
+    bbfilename = 'pip-'+RecipeFileName+'_'+PiPversionStr+'.bb'
     inheritPiPstr = '','inherit pypi setuptools','inherit pypi setuptools','inherit pypi setuptools3'
     print('--> Create the Bitbake .bb-File with the name')
     print('      '+bbfilename)
@@ -384,7 +384,7 @@ if __name__ == '__main__':
     bbFileContent = '# The is automatic generated Code by "makePipRecipes.py"\n' \
         '# (build by Robin Sebastian (https://github.com/robseb) (git@robseb.de) Vers.: '+version+') \n' \
         '\n' \
-        'SUMMARY = "Recipie to embedded the Python PiP Package '+PipName+'"\n' \
+        'SUMMARY = "Recipe to embedded the Python PiP Package '+PipName+'"\n' \
         'HOMEPAGE ="https://pypi.org/project/'+PipName+'"\n' \
         'LICENSE = "'+licensenName+'"\n' \
         'LIC_FILES_CHKSUM = "file://'+LicenseFileName+';md5='+LicenseMd5sum+'"\n' \
@@ -424,7 +424,7 @@ print('#          (this file is located here:'+os.getcwd()+' )          ')
 print('# 2. Step: Include the PiP-Package to your Yocto Project by                    ')
 print('#          by adding following line to the conf/local.conf file:               ')
 print('#            conf/local.conf:                                                  ')
-print('#             IMAGE_INSTALL_append = "pip-'+RecipieFileName+'"\n               ')
+print('#             IMAGE_INSTALL_append = "pip-'+RecipeFileName+'"\n                ')
 print('# 3. Step: Build your Yocto Project normanly with bitbake\n                    ')
 print('#------------------------------------------------------------------------------#')
 print('#                                                                              #')
