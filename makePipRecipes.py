@@ -123,7 +123,7 @@ if __name__ == '__main__':
             sys.exit()
 
     selectedPythonVersion = 0
-    print("Choose the requiered Python Version:")
+    print("Choose the required Python Version:")
     print("  Python 1-2: 1,2 ")
     print("  Python 3  : 3   ")
 
