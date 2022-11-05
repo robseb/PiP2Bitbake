@@ -104,7 +104,7 @@ if __name__ == '__main__':
     print('Note: Consider the exact writing! Case sensitive!')
     print('You can find Python pip packages here: https://pypi.org/')
     PipName =input('PiP-Package Name: ')
-    Pipurl = PipName
+    Pipurl = re.sub(r"\-(\d+\.\d+\.\d+).*", r"==\1", PipName)
 
     if PipName=='q' or PipName=='Q': sys.exit()
     if PipName.endswith('.whl'):
